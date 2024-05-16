@@ -2,40 +2,7 @@ import streamlit as st
 import time
 import tensorflow as tf
 import numpy as np
-from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, ClientSettings
 
-class PhotoProcessor(VideoProcessorBase):
-    def __init__(self):
-        self._photo = None
-
-    def recv(self, frame):
-        self._photo = frame.to_ndarray(format="rgb24")
-        return self._photo
-
-def camera():
-    st.title("Webcam Stream and Capture")
-
-    processor = PhotoProcessor()
-
-    webrtc_ctx = webrtc_streamer(
-        key="example",
-        video_processor_factory=processor,
-        client_settings=ClientSettings(
-            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-        ),
-    )
-
-    if webrtc_ctx.video_processor:
-        st.image(processor._photo, channels="RGB")
-
-    if st.button("Capture Photo") and processor._photo is not None:
-        # Stocker la photo capturée dans une variable
-        st.write("Photo capturée !")
-
-def camera2():
-    picture = st.camera_input("Take a picture")
-    if(picture):
-        st.image(picture)
 
 def model_prediction(image_set):
     model = tf.keras.models.load_model('trained_model.keras')
@@ -60,8 +27,6 @@ def traitement(image_file):
             indice = str(disease).find("sain")
             if(disease[indice : (indice+4)] == "sain"):
                 st.balloons()
-    #except:
-    #    st.error("Veillez d'abord choisir une image !")
 
 def capture():
     image_file = st.camera_input(label="Prendre une photo de la fauille", label_visibility="hidden")
@@ -122,10 +87,7 @@ st.sidebar.title("Menu")
 choix = st.sidebar.selectbox("", ["Acceuil", "Détection", "A propos"])
 
 if(choix == "Acceuil"):
-    #with st.spinner("Patientez..."):
-    #    time.sleep(5)
-    #st.balloons()
-    #st.snow()
+
     st.markdown("""
    ## Bienvenue dans notre application 
    - **Une appication de detection des maladie des plantes pour améliorer l'agriculture au Cameroun.**
@@ -138,40 +100,7 @@ if(choix == "Acceuil"):
    2. **Analyse :** Notre système va traité l'image en utilisant des algorithmes avancé pour identifier la potentielle maladie
    3. **Résultat :** Visualiser le resultat et prevoyer un traitement en cas de maladie
    ## Pourquoi nous choisir 🤔 ?
-   - **Bonnimport streamlit as st
-from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, ClientSettings
-
-class PhotoProcessor(VideoProcessorBase):
-    def __init__(self):
-        self._photo = None
-
-    def recv(self, frame):
-        self._photo = frame.to_ndarray(format="rgb24")
-        return self._photo
-
-def main():
-    st.title("Webcam Stream and Capture")
-
-    processor = PhotoProcessor()
-
-    webrtc_ctx = webrtc_streamer(
-        key="example",
-        video_processor_factory=processor,
-        client_settings=ClientSettings(
-            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-        ),
-    )
-
-    if webrtc_ctx.video_processor:
-        st.image(processor._photo, channels="RGB")
-
-    if st.button("Capture Photo") and processor._photo is not None:
-        # Stocker la photo capturée dans une variable
-        st.write("Photo capturée !")
-
-if __name__ == "__main__":
-    main()
-e prédiction :** Notre système utilise l'état de l'art des techniques du machine learning avancé 
+   - **Bonne prédiction :** Notre système utilise l'état de l'art des techniques du machine learning avancé 
    pour donner de meilleurs réponses.
    - **Facile a utiliser :** Une interface simple et intuitive pour une meilleur expérience utilisateur
    - **Rapide et efficace :** La réponse est transmis quelque seconde après validation du bouton de décision 
